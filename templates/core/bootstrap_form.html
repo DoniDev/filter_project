@@ -1,0 +1,112 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    Django Filter
+{% endblock %}
+
+{% block content %}
+
+    <main role="main" class="container">
+        <h3>Filter Journals</h3>
+
+        <form action="."  method="GET">
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input type="search" name="title_contains" class="form-control py-2 border-right-0 border" placeholder="Title contains...">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input type="search" name="id_exact" class="form-control py-2 border-right-0 border" placeholder="ID exact..">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input type="search" name="title_or_author" class="form-control py-2 border-right-0 border" placeholder="Title or author...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-2 col-lg-2">
+                    <label for="viewCountMin">Minimum View Count</label>
+                    <input type="number" min=0 class="form-control" id="viewCountMin" placeholder="type min" name="view_count_min">
+                </div>
+                <div class="form-group col-md-2 col-lg-2">
+                    <label for="viewCountMax">Maximum View Count</label>
+                    <input type="number" class="form-control" id="viewCountMax" placeholder="type max" name="view_count_max">
+                </div>
+                <div class="form-group col-md-2 col-lg-2">
+                    <label for="publishDateMin">Publish date minimum</label>
+                    <input type="date" class="form-control" id="publishDateMin" name="date_min">
+                </div>
+                <div class="form-group col-md-2 col-lg-2">
+                    <label for="publishDateMax">Publish date maximum</label>
+                    <input type="date" class="form-control" id="publishDateMax" name="date_max">
+                </div>
+
+                <div class="form-group col-md-4 col-md-4">
+                    <label for="category">Category</label>
+                    <select name="category" class="form-control" id="category">
+                        <option selected>Choose...</option>
+                        {% for category in categories %}
+
+                            <option value="{{ category }}">{{ category }}</option>
+
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="reviewed" name="reviewed">
+                  <label class="form-check-label" for="reviewed">
+                      Reviewed
+                  </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="notReviewed" name="notReviewed">
+                    <label class="form-check-label" for="notReviewed">
+                        Not reviewed
+                    </label>
+                </div>
+             </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <hr>
+
+        <div class="row">
+            <ul>
+                {% for journal in queryset %}
+                    <li>
+                        <b>Title</b>: {{ journal.title }} <br>
+                        <span><b>Author</b>:   {{ journal.author.name }}</span><br>
+                        <span>
+                            <b>Category:</b>
+                            {% for cat in journal.categories.all %}
+                                {{ cat }}
+                            {% endfor %}
+                        </span><br>
+                        <span><b>Published Date</b>: {{ journal.publish_date }}</span><br>
+                        <span><b>View Count</b>: {{ journal.views }}</span><br>
+                        <span><b>Reviewed</b>: {{ journal.reviewed }}</span><br><br>
+                        <hr>
+                    </li>
+                 {% empty %}
+                    <li>No results found</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </main>
+{% endblock %}
